@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const app = express();
 
@@ -48,7 +46,7 @@ app.use(passport.session()); //req.session에 passport정보 저장
 
 
 app.use('/auth', require('./routers/auth.js') );
-
+app.use('/boq', require('./routers/boq.js'));
 
 
 
