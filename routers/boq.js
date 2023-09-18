@@ -24,7 +24,7 @@ router.get('/search/:st', async (req,res)=>{
             $search: {index: 'default', 
                       text: {
                           query: req.query.input, 
-                          path: ['mng_unit','build_nm'] 
+                          path: ['mng_unit','build_nm','sigun','eupmyeon'] 
                       },
                     },
             },
@@ -35,23 +35,29 @@ router.get('/search/:st', async (req,res)=>{
                 }
             },
             {
-             $skip: parseInt(req.params.st), // skip 스테이지 추가
+             $skip: parseInt(req.params.st), 
             },
             {
-                $limit: 10, // limit 스테이지 추가
+                $limit: 10, 
             },
         ];
-    
-        if (!req.query.input) searchQuery.shift();
+        if (req.query.sido == '시도') delete searchQuery[1].$match.sido;
+        if (req.query.armyType == '군종류') delete searchQuery[1].$match.a_dvs;
+        
 
+
+        if (!req.query.input) searchQuery.shift();
+       
     try{
         
         let boqInfos = await  OutsideBoq.aggregate(searchQuery).exec();
         const boqLength = await OutsideBoq.countDocuments(searchQuery);
-        if (!boqInfos) {
+        
+        if (boqInfos.length == 0){
             searchQuery.shift();
-            boqInfos = await OutsideBoq.aggregate(searchQuery).exec();
+            boqInfos = await  OutsideBoq.aggregate(searchQuery).exec();
         }
+        
         return res.json({isSuccess:true,boqs:boqInfos,length:boqLength});
     }catch (err){
         console.log(err);
@@ -59,7 +65,22 @@ router.get('/search/:st', async (req,res)=>{
     }
 })
 
+router.get('/detailinfo/:id', async (req,res)=>{
+   
+    try{
+        const boqInfo = await OutsideBoq.findOne({_id:req.params.id});
 
+        return res.json({isSuccess:true,boq:boqInfo});
+    }catch(err){
+
+
+        return res.json({isSuccess:false, err: err});
+    }
+   
+    
+
+
+})
 
 
 module.exports = router;
