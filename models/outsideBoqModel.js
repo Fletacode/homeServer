@@ -23,4 +23,4 @@ const outsideBoqSchema = new mongoose.Schema({
 
 
 
-module.exports= mongoose.model('',outsideBoqSchema);
+module.exports= mongoose.model('OutsideBoq',outsideBoqSchema);

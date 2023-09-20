@@ -7,6 +7,7 @@
     "axios": "^1.4.0",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.1",
+    "bun": "^1.0.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",

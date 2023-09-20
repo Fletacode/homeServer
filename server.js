@@ -16,7 +16,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const env = require('dotenv').config();
 
-const outsideboq = require( './models/outsideBoqModel.js');
+const OutsideBoq = require( './models/outsideBoqModel.js');
+const SubscriptionBoq = require( './models/subscriptionBoqModel.js');
 const fs = require('fs');
 
 
@@ -50,7 +51,7 @@ app.use(passport.session()); //req.session에 passport정보 저장
 
 app.use('/auth', require('./routers/auth.js') );
 app.use('/boq', require('./routers/boq.js'));
-
+app.use('/subscription', require('./routers/subscription.js'));
 
 
 
@@ -73,14 +74,21 @@ app.listen(3000, function() {
 
 app.get('*', function (req, res) {
 	const jsonData = JSON.parse(fs.readFileSync('./outsideBoq.json', 'utf8')); // JSON 파일 경로에 맞게 수정
+	const SubscriptionData = JSON.parse(fs.readFileSync('./subscription.json', 'utf8')); // JSON 파일 경로에 맞게 수정
 	/*
-	outsideboq.insertMany(jsonData.DATA).then((docs)=>{
+	OutsideBoq.insertMany(jsonData.DATA).then((docs)=>{
+		console.log(`${docs.length}개의 문서가 MongoDB에 삽입되었습니다.`);
+	}).catch((err)=>{
+		console.log(err);
+	})
+	
+	
+	SubscriptionBoq.insertMany(SubscriptionData.data).then((docs)=>{
 		console.log(`${docs.length}개의 문서가 MongoDB에 삽입되었습니다.`);
 	}).catch((err)=>{
 		console.log(err);
 	})
 	*/
-	
 	res.sendFile(path.join(__dirname,'/home/build/index.html'));
 	
 });
