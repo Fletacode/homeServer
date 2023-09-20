@@ -16,7 +16,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const env = require('dotenv').config();
 
-
+const OutsideBoq = require( './models/outsideBoqModel.js');
+const SubscriptionBoq = require( './models/subscriptionBoqModel.js');
+const fs = require('fs');
 
 
 app.use(cors({
@@ -24,6 +26,8 @@ app.use(cors({
     method:['GET','POST','DELETE'],
 	credentials: true,
 }));
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -47,12 +51,14 @@ app.use(passport.session()); //req.session에 passport정보 저장
 
 app.use('/auth', require('./routers/auth.js') );
 app.use('/boq', require('./routers/boq.js'));
+app.use('/subscription', require('./routers/subscription.js'));
 
 
 
-
-mongoose.connect(process.env.DB_URL, {useNewUrlParser: true})
-	 .then(()=>{console.log('연결 성공/ 포트:'+process.env.PORT)})
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+	 .then(()=>{
+		
+		console.log('연결 성공/ 포트:'+process.env.PORT)})
 	 .catch((err)=>{console.error(err)});
 
 app.listen(3000, function() {
@@ -67,8 +73,22 @@ app.listen(3000, function() {
 
 
 app.get('*', function (req, res) {
+	const jsonData = JSON.parse(fs.readFileSync('./outsideBoq.json', 'utf8')); // JSON 파일 경로에 맞게 수정
+	const SubscriptionData = JSON.parse(fs.readFileSync('./subscription.json', 'utf8')); // JSON 파일 경로에 맞게 수정
+	/*
+	OutsideBoq.insertMany(jsonData.DATA).then((docs)=>{
+		console.log(`${docs.length}개의 문서가 MongoDB에 삽입되었습니다.`);
+	}).catch((err)=>{
+		console.log(err);
+	})
 	
-
+	
+	SubscriptionBoq.insertMany(SubscriptionData.data).then((docs)=>{
+		console.log(`${docs.length}개의 문서가 MongoDB에 삽입되었습니다.`);
+	}).catch((err)=>{
+		console.log(err);
+	})
+	*/
 	res.sendFile(path.join(__dirname,'/home/build/index.html'));
 	
 });
