@@ -28,6 +28,13 @@ app.use(cors({
 }));
 
 
+app.use((req, res, next) => {
+    res.setHeader('Referrer-Policy', 'unsafe-url');
+	res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인에서 액세스 허용 (보안상 주의)
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+})
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -41,8 +48,10 @@ app.use(session({
 	session:true,
 	cookie:{
 		httpOnly:false,
-		secure:false
+		secure:false,
+		
 	},
+	
 })); //pasport정보 생성
 app.use(passport.initialize()); //req에 passport설정
 app.use(passport.session()); //req.session에 passport정보 저장
