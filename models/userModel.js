@@ -7,13 +7,14 @@ const saltRounds = 10;
 
 const userSchema = new mongoose.Schema({
   id : {type : String, required: true},
-  pw : {type : String, required: true},
- 
+  pw : {type : String},
+  provider:{type:String, required:true},
   email:{type : String},
   token:{type : String},
   resetpwData:{type: Array},
   provider:{type : String},
   name:{type:String},
+  
 },{timestamps:true},{collection:'user'});
 
 

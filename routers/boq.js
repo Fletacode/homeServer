@@ -89,4 +89,6 @@ router.get('/detailinfo/:id', async (req,res)=>{
 })
 
 
+
+
 module.exports = router;

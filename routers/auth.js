@@ -12,6 +12,25 @@ router.post('/join' , isNotLoggedIn , join);
 //로그인 기능 passport token안 감
 router.post('/login', isNotLoggedIn, login);
 
+router.get('/islogin', isLoggedIn , (req,res)=>{
+    
+    
+    res.json({isSuccess:true, userID:req.user.id});
+})
 
+router.get('/logout', isLoggedIn, (req,res)=>{
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        res.json({isSuccess:true})
+    });
+})
+
+router.get('/kakao', passport.authenticate('kakao'));
+
+router.get('/kakao/callback', passport.authenticate('kakao', {
+    failureRedirect:'/?loginError=카카오로그인실패',
+}), (req,res)=>{
+    res.redirect('/');
+});
 
 module.exports = router;
