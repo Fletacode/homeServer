@@ -1,0 +1,32 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
+    "hostRequirements": {
+      "cpus": 4
+    },
+    "waitFor": "onCreateCommand",
+    "updateContentCommand": "npm install",
+    "postCreateCommand": "",
+    "postAttachCommand": {
+      "server": "npm start"
+    },
+    "customizations": {
+      "codespaces": {
+        "openFiles": [
+          "src/App.js"
+        ]
+      }
+    },
+    "portsAttributes": {
+      "3000": {
+        "label": "Application",
+        "onAutoForward": "openPreview"
+      }
+    },
+    "forwardPorts": [3000],
+    "containerEnv": {
+        "NODE_ENV": "development", // Node.js 환경 설정
+        "CORS_ALLOW_ORIGIN": "*", // CORS 허용 설정 (실제 환경에서는 '*' 대신 특정 도메인을 지정하세요)
+        "COOKIE_SAMESITE": "None; Secure" // 쿠키 설정 (실제 환경에서는 필요한 설정을 적용하세요)
+      }
+  }
+  

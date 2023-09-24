@@ -25,4 +25,12 @@ router.get('/logout', isLoggedIn, (req,res)=>{
     });
 })
 
+router.get('/kakao', passport.authenticate('kakao'));
+
+router.get('/kakao/callback', passport.authenticate('kakao', {
+    failureRedirect:'/?loginError=카카오로그인실패',
+}), (req,res)=>{
+    res.redirect('/');
+});
+
 module.exports = router;

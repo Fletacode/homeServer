@@ -2,11 +2,14 @@
 import {Container,Button,Image,Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState} from 'react';
+import { useNavigate} from 'react-router-dom';
 
 import { serverurl } from './serverurl.js';
 import axios from 'axios';
 
 export default function Join() {
+	const navigate = useNavigate();
+
 	const [isLoginActiveCss,setIsLoginActiveCss] = useState(true);
 	const LoginActiveCss = (isLoginActiveCss) ? 'nav-link active' : 'nav-link';
 	const RegisterActiveCss = (isLoginActiveCss) ? 'nav-link' : 'nav-link active';
@@ -64,15 +67,17 @@ export default function Join() {
 	const ClickisLogin = ()=>{
 		axios.get(serverurl+"/auth/islogin").then((result)=>{
             if (result.data.isSuccess){
-				console.log(result);
+				
             }else{
-                console.log(result);
+                
 
             }
         }).catch((err)=>{
             console.log(err);
         })
 	}
+
+	
 
 	
 	const iconStyle = {
@@ -104,10 +109,16 @@ export default function Join() {
 							style={{margin:'0px 10px 10px 10px'}}
 					
 							alt={"네이버로그인"}/>
+						<a href="https://bug-free-spoon-v7qv667gwqwhwvpp-3000.app.github.dev/auth/kakao">
 						<Image src={kakaoLoginImgUrl} 
 							height={40}
 							style={{margin:'0px 10px 10px 10px'}}
-							alt={"카카오로그인"}/>
+							alt={"카카오로그인"}
+							
+							/>
+
+						</a>
+						
 						<Image src={gooleLoginImgUrl}
 							height={40}
 							style={{margin:'0px 10px 10px 10px'}}

@@ -11,7 +11,7 @@ exports.join = async(req,res,next) =>{
 		if (exUser){
 			return res.json({isSuccess:false,msg:'존재하는 아이디,이메일입니다.'});
 		}
-		
+		req.body.provider = "local";
 		const iUser = await new User(req.body);
 		
 		await iUser.save().then((saveResult)=>{
