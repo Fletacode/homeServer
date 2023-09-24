@@ -148,7 +148,7 @@ export default function Join() {
       					</Form.Group>
 					 </div>
 					
-					 <div class="col-md-6 d-flex justify-content-center"><a href="#!">비밀번호를 잊으셨습니까?</a></div>
+					 <div class="col-md-6 d-flex justify-content-center"><a href="/searchpw">비밀번호를 잊으셨습니까?</a></div>
 						
 					 <Button variant="primary" 
 						 style={{width:'100%',marginTop:'30px',marginBottom:'50px'}}

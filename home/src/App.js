@@ -7,6 +7,8 @@ import Join from './routers/Join.js';
 import Boq from './routers/Boq.js';
 import {BoqDetailed} from './routers/BoqDetailed.js';
 import {Subscrption} from './routers/Subscrption.js';
+import {SearchPw} from './routers/SearchPw.js';
+import {ResetPw} from './routers/ResetPw.js';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Route path='/boq' element={<Boq></Boq> } />
       <Route path='/boq/:id' element={<BoqDetailed></BoqDetailed> } />
       <Route path='/subscrption' element={<Subscrption></Subscrption>}></Route>
+      <Route path='/searchpw' element={<SearchPw></SearchPw>}></Route>
+      <Route path='/resetpw/:token' element={<ResetPw></ResetPw>}></Route>
 	  </Routes>	  
     </>
   );
