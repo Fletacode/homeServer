@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState} from 'react';
 
 import { serverurl } from './serverurl.js';
-
+import {Reviews} from './Reviews.js';
 
 import axios from 'axios';
 import { useNavigate,useParams} from 'react-router-dom';
@@ -93,36 +93,8 @@ export  function BoqDetailed() {
 
     <div style={{    background: '#F8F9FA',
                 padding: '5px'}}></div>
-
-    <Container className='mt-2'>
-        <h2>후기</h2>
-        {reviews.map((review)=>{
-            if (!reviews){
-                return(
-                    <>
-                    <div>리뷰없음</div>
-                    </>
-                )
-            }else{
-                return(
-                    <Card style={{ width: '100%' ,display:'flex', flexDirection:'row', justifyContent:'center'}}>
-                
-                    <Card.Body>
-               
-                    <Card.Text>{review.content}</Card.Text>
-                    <span style={{opacity:0.5}}>{review.writer} : {review.time}</span>
-                    </Card.Body>
-                    </Card>
     
-                )
-            }
-            
-            
-        })}
-        
-
-
-    </Container>
+      <Reviews reviews={reviews}></Reviews>
 
 
 

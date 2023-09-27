@@ -4,32 +4,21 @@ import { useState,useEffect} from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { serverurl } from './serverurl.js';
+import { useSelector, useDispatch } from 'react-redux';
 
 export function NavBar() {
-	const [user,setUser] = useState('');
+	let user = useSelector((state) => state.userSlice);
 	const navigate = useNavigate();
-
+	user = user?.user;
 	const navLogourl = serverurl+'/images/navlogo.png';
 	
-	useEffect(()=>{
-		
-        axios.get(serverurl+"/auth/islogin").then((result)=>{
-            if (result.data.isSuccess){
-				setUser(result.data.user);
-            }else{
-                
-
-            }
-        }).catch((err)=>{
-            
-        })
-		
-    },[])
+	
+	
 	
 	const LogOut = ()=>{
 		axios.get(serverurl+'/auth/logout').then((result)=>{
 			if (result.data.isSuccess){
-				window.location.replace("/");
+				window.location.replace('/');
 			}
 		}).catch((err)=>{
 			console.log(err);
@@ -41,7 +30,7 @@ export function NavBar() {
     <>
     <Navbar expand="lg" className="bg-body-tertiary">
 	 <Container>
-	 	 <Navbar.Brand href="/">
+	 	 <Navbar.Brand onClick={()=>{navigate('/')}}>
 			<Image src={navLogourl}
 			roundedCircle
 			height={55}
@@ -66,7 +55,7 @@ export function NavBar() {
 		 			<Navbar.Collapse id="basic-navbar-nav">
 			 			 <Nav className="me-auto">
 						  {
-						(user) ? (<Profile user={user} LogOut={LogOut}></Profile>) :  (<div style={{display:'flex', justifyContent: 'space-between'}}> 
+						(user?.provider) ? (<Profile user={user} LogOut={LogOut}></Profile>) :  (<div style={{display:'flex', justifyContent: 'space-between'}}> 
 					<div style={{display : 'flex',justifyContent : 'center', alignItems : 'center' ,opacity:"0.7"}}>로그인이 필요합니다</div> 
 					  <Nav.Link href="/join">로그인/회원가입</Nav.Link>
 				  </div>)
