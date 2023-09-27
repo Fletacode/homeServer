@@ -13,8 +13,8 @@ router.post('/join' , isNotLoggedIn , join);
 router.post('/login', isNotLoggedIn, login);
 
 router.get('/islogin', isLoggedIn , (req,res)=>{
-    console.log(req.user);
     
+    req.user.pw = "";
     res.json({isSuccess:true, user:req.user});
 })
 

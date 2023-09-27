@@ -56,7 +56,7 @@ app.use('/boq', require('./routers/boq.js'));
 app.use('/subscription', require('./routers/subscription.js'));
 app.use('/resetpw', require('./routers/resetpw.js'));
 app.use('/mail', require('./routers/mail.js'));
-
+app.use('/review', require('./routers/review.js'));
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 	 .then(()=>{

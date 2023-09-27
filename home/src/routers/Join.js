@@ -3,17 +3,16 @@ import {Container,Button,Image,Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState} from 'react';
 import { useNavigate} from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateUser, userSlice } from '../store.js';
+
 
 import { serverurl } from './serverurl.js';
 import axios from 'axios';
 
 export default function Join() {
 	const navigate = useNavigate();
-
-	const user = useSelector((state) => state.userSlice);
-  	const dispatch = useDispatch();
+	
+	
+  	
 
 
 	const [isLoginActiveCss,setIsLoginActiveCss] = useState(true);
@@ -46,6 +45,7 @@ export default function Join() {
 			if (result.data.isSuccess){
 				alert(result.data.msg);
 				navigate('/');
+				
 			}else{
 				alert(result.data.msg);
 			}
@@ -63,11 +63,11 @@ export default function Join() {
 		try{
 			let isLoginComplete = await axios.post(serverurl+'/auth/login',LoginData);
 			alert(isLoginComplete.data.msg);
-			let checkLoginState = await axios.get(serverurl+"/auth/islogin");
-			if (checkLoginState.data.isSuccess){
-				dispatch(updateUser(checkLoginState.data.user));
+			
+			if (isLoginComplete.data.isSuccess){
 				
-				navigate('/');
+				
+				window.location.replace('/');
 			}
 		}catch(err){
 			console.log(err);

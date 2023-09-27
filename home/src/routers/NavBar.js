@@ -4,15 +4,25 @@ import { useState,useEffect} from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { serverurl } from './serverurl.js';
-import { useSelector, useDispatch } from 'react-redux';
+
 
 export function NavBar() {
-	let user = useSelector((state) => state.userSlice);
+
 	const navigate = useNavigate();
-	user = user?.user;
+	const [user,setUser] = useState('');
 	const navLogourl = serverurl+'/images/navlogo.png';
 	
-	
+	useEffect(()=>{
+		axios.get(serverurl+`/auth/islogin`)
+    	.then((result)=>{
+      		if (result.data.isSuccess){
+       		 setUser(result.data.user);
+     		 }
+    	}).catch((err)=>{
+      		console.log(err);
+    	})
+
+	},[])
 	
 	
 	const LogOut = ()=>{
