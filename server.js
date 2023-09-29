@@ -76,8 +76,8 @@ app.listen(3000, function() {
 
 
 app.get('*', function (req, res) {
-	const jsonData = JSON.parse(fs.readFileSync('./outsideBoq.json', 'utf8')); // JSON 파일 경로에 맞게 수정
-	const SubscriptionData = JSON.parse(fs.readFileSync('./subscription.json', 'utf8')); // JSON 파일 경로에 맞게 수정
+	//const jsonData = JSON.parse(fs.readFileSync('./outsideBoq.json', 'utf8')); // JSON 파일 경로에 맞게 수정
+	//const SubscriptionData = JSON.parse(fs.readFileSync('./subscription.json', 'utf8')); // JSON 파일 경로에 맞게 수정
 	/*
 	OutsideBoq.insertMany(jsonData.DATA).then((docs)=>{
 		console.log(`${docs.length}개의 문서가 MongoDB에 삽입되었습니다.`);

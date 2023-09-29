@@ -5,6 +5,7 @@ import { useEffect, useState} from 'react';
 
 import { serverurl } from './serverurl.js';
 
+import * as Facilities from './Facilities.js';
 
 import axios from 'axios';
 import { useNavigate,useParams} from 'react-router-dom';
@@ -28,7 +29,27 @@ export  function BoqDetailed() {
     }).catch((err)=>{
         alert("에러 입니다"+err);
     })
+
+    Facilities.AddrTOcoor(Facilities.bbb).then((res) => {
+      console.log(res);
+      Facilities.NeighbooringFacilities(
+        res.x,
+        res.y,
+        Facilities.category.은행
+      ).then((res) =>
+        setFac(
+          res.map(
+            (dat) =>
+              `${dat.category_group_name} : ${dat.distance / 1000}km 거리에 ${
+                dat.place_name
+              }`
+          )
+        )
+      );
+    });
+
   },[])
+
 
 
   return (
@@ -71,7 +92,7 @@ export  function BoqDetailed() {
 	  
 	 </Carousel>
 
-    {(boq) ? (<BoqContent boq={boq}></BoqContent>) : (<Spinner animation="border" role="status">
+    {(boq) ? (<BoqContent boq={boq}></BoqContent>) : (<Spinner animation="border" role="status"> {/**  로딩 스피너 예시*/}
       <span className="visually-hidden">Loading...</span>
     </Spinner>)}
 
@@ -81,7 +102,7 @@ export  function BoqDetailed() {
     {stations.map((station)=>{
       return(
         <>
-        
+        <ListGroup.Item><NearFacilities boq={boq} category={"편의점"} /></ListGroup.Item>
         <ListGroup.Item>Cras justo odio</ListGroup.Item>
         
         </>
@@ -158,6 +179,17 @@ export function BoqContent(props){
     );
 }
 
+ async function NearFacilities(props) {
+    const boqcoordinate = await Facilities.AddrTOcoor(props.boq)
+      NeighbooringFacilities(res.x, res.y, props.category);
+    const NeighbooringFacilities = await NeighbooringFacilities(boqcoordinate.x, boqcoordinate.y, category.편의점);
 
+
+    return(
+      <div>
+       {NeighbooringFacilities[0].category_group_name} : {NeighbooringFacilities[0].distance}m 거리에 {NeighbooringFacilities[0].place_name}
+      </div>
+    )
+}
 
 
