@@ -1,11 +1,11 @@
-
+import * as facilities from "./facilities";
 import {Container,Button,Image,ListGroup ,Col,Row,Card,Carousel,Spinner} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 
 import { serverurl } from './serverurl.js';
 
-import * as Facilities from './Facilities.js';
 
 import axios from 'axios';
 import { useNavigate,useParams} from 'react-router-dom';
@@ -16,37 +16,29 @@ export  function BoqDetailed() {
 	const [boq,setBoq] = useState('');
   const [reviews, setReviews] = useState([{content:'시설이 조아요!',writer:'김**',time:'2023.03.31'}])
   const [stations,setStations] = useState(['1']);
-  
+  const [majorFac, setMajorFac] = useState(false);
+  const majorCat = facilities.category.slice(0,5);
+  let boqCoordinate = false;
 
   useEffect(()=>{
     axios.get(serverurl+`/boq/detailinfo/${id}`)
     .then((result)=>{
         if (result.data.isSuccess){
+          console.log(result.data.boq);
           setBoq(result.data.boq);
-        }else{
-          throw "err";
-        }
+        } else throw "err";
+
+        facilities.addrTOcoor(result.data.boq).then((coordinate) =>
+        {
+          Promise.all(majorCat.map((category) => facilities.neighbooringFacilities(coordinate, category)))
+          .then((major) => {setMajorFac(major); console.log(major)})
+          .catch((err)=>alert(err));
+        });
+        
     }).catch((err)=>{
         alert("에러 입니다"+err);
     })
 
-    Facilities.AddrTOcoor(Facilities.bbb).then((res) => {
-      console.log(res);
-      Facilities.NeighbooringFacilities(
-        res.x,
-        res.y,
-        Facilities.category.은행
-      ).then((res) =>
-        setFac(
-          res.map(
-            (dat) =>
-              `${dat.category_group_name} : ${dat.distance / 1000}km 거리에 ${
-                dat.place_name
-              }`
-          )
-        )
-      );
-    });
 
   },[])
 
@@ -99,15 +91,15 @@ export  function BoqDetailed() {
     <Container className='mt-2'>
     <h2>주변 시설</h2>
     <ListGroup>
-    {stations.map((station)=>{
-      return(
-        <>
-        <ListGroup.Item><NearFacilities boq={boq} category={"편의점"} /></ListGroup.Item>
-        <ListGroup.Item>Cras justo odio</ListGroup.Item>
+
+        {majorFac ?     
+        <div>{majorFac.map((eachCat) => eachCat.length == 0 ? <></> : <Periphery fac={eachCat[0]} />)}</div>
         
-        </>
-      )
-    })}
+         : 
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+    }
     </ListGroup>
     </Container>
     
@@ -179,17 +171,18 @@ export function BoqContent(props){
     );
 }
 
- async function NearFacilities(props) {
-    const boqcoordinate = await Facilities.AddrTOcoor(props.boq)
-      NeighbooringFacilities(res.x, res.y, props.category);
-    const NeighbooringFacilities = await NeighbooringFacilities(boqcoordinate.x, boqcoordinate.y, category.편의점);
-
-
-    return(
-      <div>
-       {NeighbooringFacilities[0].category_group_name} : {NeighbooringFacilities[0].distance}m 거리에 {NeighbooringFacilities[0].place_name}
-      </div>
-    )
+export function Periphery(props){
+  return(
+    <>
+    <Link to={props.fac.place_url} target="_blank" style={{ textDecoration: 'none' }}>
+      <ListGroup.Item>
+        {`${props.fac.category_group_name} : ${props.fac.distance / 1000}km 거리에 ${
+                  props.fac.place_name}`}
+      </ListGroup.Item>
+    </Link>
+    </>
+  )
 }
+
 
 
