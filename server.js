@@ -16,6 +16,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const env = require('dotenv').config();
 
+
 const OutsideBoq = require( './models/outsideBoqModel.js');
 const SubscriptionBoq = require( './models/subscriptionBoqModel.js');
 const fs = require('fs');
@@ -27,15 +28,7 @@ app.use(cors({
 	credentials: true,
 }));
 
-/*
-app.use((req, res, next) => {
-    res.setHeader('Referrer-Policy', 'unsafe-url');
-	res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인에서 액세스 허용 (보안상 주의)
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-})
-*/
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -61,8 +54,9 @@ app.use(passport.session()); //req.session에 passport정보 저장
 app.use('/auth', require('./routers/auth.js') );
 app.use('/boq', require('./routers/boq.js'));
 app.use('/subscription', require('./routers/subscription.js'));
-
-
+app.use('/resetpw', require('./routers/resetpw.js'));
+app.use('/mail', require('./routers/mail.js'));
+app.use('/review', require('./routers/review.js'));
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 	 .then(()=>{

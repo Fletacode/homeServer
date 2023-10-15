@@ -14,8 +14,8 @@ router.post('/login', isNotLoggedIn, login);
 
 router.get('/islogin', isLoggedIn , (req,res)=>{
     
-    
-    res.json({isSuccess:true, userID:req.user.id});
+    req.user.pw = "";
+    res.json({isSuccess:true, user:req.user});
 })
 
 router.get('/logout', isLoggedIn, (req,res)=>{

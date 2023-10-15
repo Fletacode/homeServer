@@ -34,16 +34,16 @@ exports.login = (req,res,next) =>{
 	passport.authenticate('local', (authError,user,info) =>{
 		
 		if (authError){
-			console.log(authError);
+			
 			return next(authError);
 		}
 		if (!user){
-			console.log(info.message);
+			
 			return res.json({isSuccess:false,msg:info.message});
 		}
 		return req.login(user, (loginError)=>{
 			if (loginError){
-				console.log(loginError);
+			
 				return next(loginError);
 			}
 			return res.json({isSuccess:true,msg:'로그인 성공!'});

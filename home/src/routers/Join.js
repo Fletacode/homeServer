@@ -1,14 +1,19 @@
 
 import {Container,Button,Image,Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState} from 'react';
+import { useEffect, useState} from 'react';
 import { useNavigate} from 'react-router-dom';
+
 
 import { serverurl } from './serverurl.js';
 import axios from 'axios';
 
 export default function Join() {
 	const navigate = useNavigate();
+	
+	
+  	
+
 
 	const [isLoginActiveCss,setIsLoginActiveCss] = useState(true);
 	const LoginActiveCss = (isLoginActiveCss) ? 'nav-link active' : 'nav-link';
@@ -25,6 +30,10 @@ export default function Join() {
 	const naverImgUrl = serverurl+'/images/naver_login_small.png';
 	const kakaoLoginImgUrl = serverurl+'/images/kakao_login_small.png';
 	const gooleLoginImgUrl  = serverurl+'/images/goole_login_small.png';
+
+	
+
+
 	const ClickJoin = ()=>{
 		const joinData = {
 			id:idJoin,
@@ -35,7 +44,8 @@ export default function Join() {
 		.then((result)=>{
 			if (result.data.isSuccess){
 				alert(result.data.msg);
-				window.location.replace('/');
+				navigate('/');
+				
 			}else{
 				alert(result.data.msg);
 			}
@@ -45,38 +55,28 @@ export default function Join() {
 		})
 	}
 	
-	const ClickLogin = ()=>{
+	const ClickLogin = async ()=>{
 		const LoginData = {
 			id:idLogin,
 			pw:pwLogin,
 		}
-		axios.post(serverurl+'/auth/login',LoginData)
-		.then((result)=>{
-			if (result.data.isSuccess){
-				alert(result.data.msg);
+		try{
+			let isLoginComplete = await axios.post(serverurl+'/auth/login',LoginData);
+			alert(isLoginComplete.data.msg);
+			
+			if (isLoginComplete.data.isSuccess){
+				
+				
 				window.location.replace('/');
-			}else{
-				alert(result.data.msg);
 			}
-		}).catch((err)=>{
+		}catch(err){
 			console.log(err);
-			alert('로그인 오류');
-		})
+		}
+		
+		
 	}
 	
-	const ClickisLogin = ()=>{
-		axios.get(serverurl+"/auth/islogin").then((result)=>{
-            if (result.data.isSuccess){
-				
-            }else{
-                
-
-            }
-        }).catch((err)=>{
-            console.log(err);
-        })
-	}
-
+	
 	
 
 	
@@ -148,11 +148,11 @@ export default function Join() {
       					</Form.Group>
 					 </div>
 					
-					 <div class="col-md-6 d-flex justify-content-center"><a href="#!">비밀번호를 잊으셨습니까?</a></div>
+					 <div class="col-md-6 d-flex justify-content-center"><a href="/searchpw">비밀번호를 잊으셨습니까?</a></div>
 						
 					 <Button variant="primary" 
 						 style={{width:'100%',marginTop:'30px',marginBottom:'50px'}}
-						 onClick={()=>{ClickLogin()}}
+						 onClick={()=>{ClickLogin();}}
 						 >로그인</Button>
 				  </Form>
 				

@@ -12,9 +12,9 @@ const userSchema = new mongoose.Schema({
   email:{type : String},
   token:{type : String},
   resetpwData:{type: Array},
-  provider:{type : String},
-  name:{type:String},
   
+  name:{type:String},
+  img_url:{type:String}
 },{timestamps:true},{collection:'user'});
 
 

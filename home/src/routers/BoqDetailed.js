@@ -4,30 +4,52 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState} from 'react';
 
 import { serverurl } from './serverurl.js';
-
+import {Reviews} from './Reviews.js';
 
 import axios from 'axios';
 import { useNavigate,useParams} from 'react-router-dom';
+
 
 export  function BoqDetailed() {
 	let {id} = useParams();
   const tempImgUrl = `${serverurl}/images/tempHomeDetiled.jpg`;
 	const [boq,setBoq] = useState('');
-  const [reviews, setReviews] = useState([{content:'시설이 조아요!',writer:'김**',time:'2023.03.31'}])
+  const [reviews, setReviews] = useState('');
   const [stations,setStations] = useState(['1']);
+  const [user,setUser] = useState('');
   
 
   useEffect(()=>{
+
+    
+
+
+
+
     axios.get(serverurl+`/boq/detailinfo/${id}`)
     .then((result)=>{
         if (result.data.isSuccess){
           setBoq(result.data.boq);
+          axios.get(serverurl+`/review/${result.data.boq.build_nm}`)
+          .then((result)=>{
+            if (result.data.isSuccess){
+              setReviews(result.data.reviews);
+            }else{
+              throw "err";
+            }
+            }).catch((err)=>{
+              alert("에러 입니다"+err);
+            })
         }else{
           throw "err";
         }
     }).catch((err)=>{
         alert("에러 입니다"+err);
     })
+
+    
+
+    
   },[])
 
 
@@ -93,36 +115,11 @@ export  function BoqDetailed() {
 
     <div style={{    background: '#F8F9FA',
                 padding: '5px'}}></div>
-
-    <Container className='mt-2'>
-        <h2>후기</h2>
-        {reviews.map((review)=>{
-            if (!reviews){
-                return(
-                    <>
-                    <div>리뷰없음</div>
-                    </>
-                )
-            }else{
-                return(
-                    <Card style={{ width: '100%' ,display:'flex', flexDirection:'row', justifyContent:'center'}}>
-                
-                    <Card.Body>
-               
-                    <Card.Text>{review.content}</Card.Text>
-                    <span style={{opacity:0.5}}>{review.writer} : {review.time}</span>
-                    </Card.Body>
-                    </Card>
-    
-                )
-            }
-            
-            
-        })}
-        
-
-
-    </Container>
+    {(reviews)? (<Reviews reviews={reviews} setReviews={setReviews}  buildName={boq.build_nm}></Reviews> ):
+     (<Spinner animation="border" role="status">
+     <span className="visually-hidden">Loading...</span>
+   </Spinner>)}
+      
 
 
 

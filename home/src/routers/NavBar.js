@@ -5,31 +5,30 @@ import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { serverurl } from './serverurl.js';
 
-export function NavBar() {
-	const [userID,setUserID] = useState('');
-	const navigate = useNavigate();
 
+export function NavBar() {
+
+	const navigate = useNavigate();
+	const [user,setUser] = useState('');
 	const navLogourl = serverurl+'/images/navlogo.png';
 	
 	useEffect(()=>{
-		
-        axios.get(serverurl+"/auth/islogin").then((result)=>{
-            if (result.data.isSuccess){
-				setUserID(result.data.userID);
-            }else{
-                
+		axios.get(serverurl+`/auth/islogin`)
+    	.then((result)=>{
+      		if (result.data.isSuccess){
+       		 setUser(result.data.user);
+     		 }
+    	}).catch((err)=>{
+      		console.log(err);
+    	})
 
-            }
-        }).catch((err)=>{
-            
-        })
-		
-    },[])
+	},[])
+	
 	
 	const LogOut = ()=>{
 		axios.get(serverurl+'/auth/logout').then((result)=>{
 			if (result.data.isSuccess){
-				window.location.replace("/");
+				window.location.replace('/');
 			}
 		}).catch((err)=>{
 			console.log(err);
@@ -41,7 +40,7 @@ export function NavBar() {
     <>
     <Navbar expand="lg" className="bg-body-tertiary">
 	 <Container>
-	 	 <Navbar.Brand href="/">
+	 	 <Navbar.Brand onClick={()=>{navigate('/')}}>
 			<Image src={navLogourl}
 			roundedCircle
 			height={55}
@@ -66,10 +65,7 @@ export function NavBar() {
 		 			<Navbar.Collapse id="basic-navbar-nav">
 			 			 <Nav className="me-auto">
 						  {
-						(userID) ? (<div style={{display:'flex', justifyContent: 'space-between'}}> 
-					<div style={{display : 'flex',justifyContent : 'center', alignItems : 'center' ,opacity:"0.7"}}>{userID}님 안녕하세요!</div> 
-					  <div onClick={()=>{LogOut()}}>로그아웃</div>
-				  </div> ) :  (<div style={{display:'flex', justifyContent: 'space-between'}}> 
+						(user?.provider) ? (<Profile user={user} LogOut={LogOut}></Profile>) :  (<div style={{display:'flex', justifyContent: 'space-between'}}> 
 					<div style={{display : 'flex',justifyContent : 'center', alignItems : 'center' ,opacity:"0.7"}}>로그인이 필요합니다</div> 
 					  <Nav.Link href="/join">로그인/회원가입</Nav.Link>
 				  </div>)
@@ -88,20 +84,38 @@ export function NavBar() {
 
 
 export function Profile(props){
-	return(
-	<>	
-		<div style={{display:'flex',alignItems: 'center'}}>
-		{(props.imgurl) ? (<Image src={props.imgurl}
+
+	if (props.user.provider === 'kakao'){
+		return(
+			<>
+			<div style={{display:'flex',alignItems: 'center' ,justifyContent: 'space-between'}}>
+			<div style={{display:'flex',alignItems: 'center'}}>
+			{(props.user.img_url) ? (<Image src={props.user.img_url}
 			roundedCircle
 			height={55}
 			style={{padding:'10px'}}
 			alt={"프로필이미지 없음"}/>) : null}
 		
-		<div>{props.userID}님</div>
-		</div>
+		<div>{props.user.name}님</div>
+			</div>
+
+			<div onClick={()=>{props.LogOut()}}>로그아웃</div>
 		
-	</>
-	)
+		</div>
+		</>
+		)
+	}else{
+		return(
+		<>
+		<div style={{display:'flex', justifyContent: 'space-between'}}> 
+					<div style={{display : 'flex',justifyContent : 'center', alignItems : 'center' ,opacity:"0.7"}}>{props.user.id}님 안녕하세요!</div> 
+					  <div onClick={()=>{props.LogOut()}}>로그아웃</div>
+		</div> 
+		</>
+
+		)
+	}
+
 }
 
 
