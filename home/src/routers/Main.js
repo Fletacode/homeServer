@@ -5,7 +5,7 @@ import { serverurl } from './serverurl.js';
 import { useNavigate} from 'react-router-dom';
 
 export default function Main() {
-  const ProfileUrl = `${serverurl}/images/TempProfile.jpg`;
+  const ProfileUrl = `${serverurl}/images/MainBanner.png`;
   const homeImgUrl = `${serverurl}/images/mainhomeIcon.png`;
   const subscrptionImgUrl = `${serverurl}/images/mainSubscriptionIcon.png`;
   const navigate = useNavigate();
@@ -16,23 +16,17 @@ export default function Main() {
 	 <Carousel style={{padding:'20px'}} data-interval="0">
 	   <Carousel.Item>
         <Image src={ProfileUrl}
-			height={200}
+        fluid
 			
 			alt={"프로필이미지 없음"}/>
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
+        
       </Carousel.Item>
       <Carousel.Item>
         <Image src={ProfileUrl}
-			height={200}
+			fluid
 			
 			alt={"프로필이미지 없음"}/>
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
+        
       </Carousel.Item>
       
 	  

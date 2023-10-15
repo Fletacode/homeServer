@@ -1,5 +1,5 @@
-
-import {Container,Button,Image,ListGroup ,Col,Row,Card,Carousel,Spinner} from 'react-bootstrap';
+import * as facilities from "./facilities";
+import {Container,Button,Image,ListGroup ,Carousel,Spinner} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState} from 'react';
 
@@ -7,17 +7,19 @@ import { serverurl } from './serverurl.js';
 import {Reviews} from './Reviews.js';
 
 import axios from 'axios';
-import { useNavigate,useParams} from 'react-router-dom';
+import { useNavigate,useParams,Link} from 'react-router-dom';
 
 
 export  function BoqDetailed() {
 	let {id} = useParams();
-  const tempImgUrl = `${serverurl}/images/tempHomeDetiled.jpg`;
+  const tempImgUrl = `${serverurl}/images/defaultBoqDetail.png`;
 	const [boq,setBoq] = useState('');
   const [reviews, setReviews] = useState('');
   const [stations,setStations] = useState(['1']);
   const [user,setUser] = useState('');
   
+  const [majorFac, setMajorFac] = useState(false);
+  const majorCat = facilities.category.slice(0,5);
 
   useEffect(()=>{
 
@@ -40,6 +42,15 @@ export  function BoqDetailed() {
             }).catch((err)=>{
               alert("에러 입니다"+err);
             })
+
+            facilities.addrTOcoor(result.data.boq).then((coordinate) =>
+            {
+              Promise.all(majorCat.map((category) => facilities.neighbooringFacilities(coordinate, category)))
+              .then((major) => {setMajorFac(major); console.log(major)})
+              .catch((err)=>alert(err));
+            });
+
+
         }else{
           throw "err";
         }
@@ -100,15 +111,14 @@ export  function BoqDetailed() {
     <Container className='mt-2'>
     <h2>주변 시설</h2>
     <ListGroup>
-    {stations.map((station)=>{
-      return(
-        <>
+    {majorFac ?     
+        <div>{majorFac.map((eachCat) => eachCat.length == 0 ? <></> : <Periphery fac={eachCat[0]} />)}</div>
         
-        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-        
-        </>
-      )
-    })}
+         : 
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+    }
     </ListGroup>
     </Container>
     
@@ -153,6 +163,22 @@ export function BoqContent(props){
       
       </>
     );
+}
+
+export function Periphery(props){
+ 
+ 
+  
+  return(
+    <>
+    <Link to={props.fac.place_url} target="_blank" style={{ textDecoration: 'none' }}>
+      <ListGroup.Item>
+        {`${props.fac.category_group_name}: ${props.fac.distance / 1000}km 거리에 ${
+                  props.fac.place_name}`}
+      </ListGroup.Item>
+    </Link>
+    </>
+  )
 }
 
 
